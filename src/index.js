@@ -15,7 +15,11 @@ refInput.addEventListener('input', debounce(onInputSearch, DEBOUNCE_DELAY));
 function onInputSearch(e) {
   const inputValue = e.target.value.trim();
 
-  getResponse(inputValue).catch(error => {
+  if (inputValue === '') {
+    return;
+  }
+
+  getData(inputValue).catch(error => {
     if (inputValue === '') {
       refList.innerHTML = '';
       refDiv.innerHTML = '';
@@ -29,18 +33,10 @@ function onInputSearch(e) {
   });
 }
 
-function getResponse(nameCounrty) {
-  return fetchCountries(nameCounrty)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(response.status);
-      }
-
-      return response.json();
-    })
-    .then(data => {
-      forInterface(data);
-    });
+function getData(nameCounrty) {
+  return fetchCountries(nameCounrty).then(data => {
+    forInterface(data);
+  });
 }
 
 function forInterface(data) {
